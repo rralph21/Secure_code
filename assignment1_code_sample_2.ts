@@ -36,7 +36,7 @@ function sendEmail(to: string, subject: string, body: string) {
 // using https
 function getData(): Promise<string> {
     return new Promise((resolve, reject) => {
-        http.get('https://insecure-api.com/get-data', (res) => {
+        http.get('https://secure-api.com/get-data', (res) => {
             let data = '';
             res.on('data', chunk => data += chunk);
             res.on('end', () => resolve(data));
@@ -66,7 +66,10 @@ function saveToDb(data: string) {
     return;
   }
 
-    const data = await getData();
-    saveToDb(data);
-    sendEmail('admin@example.com', 'User Input', userInput.trim());
-})();
+    try {
+        const data = await getData();
+        saveToDb(data);
+        sendEmail('admin@example.com', 'User Input', userInput.trim());
+        } catch (err) {
+            console.error("Request failed:", err);
+}});
